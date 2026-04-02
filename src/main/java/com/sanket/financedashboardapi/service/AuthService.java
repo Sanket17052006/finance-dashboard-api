@@ -5,6 +5,7 @@ import com.sanket.financedashboardapi.dto.request.SignupRequest;
 import com.sanket.financedashboardapi.dto.response.AuthResponse;
 import com.sanket.financedashboardapi.enums.Role;
 import com.sanket.financedashboardapi.enums.UserStatus;
+import com.sanket.financedashboardapi.exception.UnauthorizedActionException;
 import com.sanket.financedashboardapi.model.User;
 import com.sanket.financedashboardapi.repository.UserRepository;
 import com.sanket.financedashboardapi.security.JwtUtil;
@@ -25,9 +26,10 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
+
     public AuthResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new UnauthorizedActionException("Email already in use");
         }
 
         User user = User.builder()
