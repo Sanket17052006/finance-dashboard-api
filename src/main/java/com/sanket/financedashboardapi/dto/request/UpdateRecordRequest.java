@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 public class UpdateRecordRequest {
 
-    @Min(value = 0, message = "Amount >=0")
+    @Min(value = 1, message = "Amount >0")
     private Double amount;
 
     private TransactionType type;

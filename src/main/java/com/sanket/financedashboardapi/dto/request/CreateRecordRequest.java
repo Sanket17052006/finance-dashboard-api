@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class CreateRecordRequest {
 
     @NotNull(message = "Enter Amount")
-    @Min(value = 0, message = "Amount should be >=0")
+    @Min(value = 1, message = "Amount must be >0")
     private Double amount;
 
     @NotNull(message = "Type is required (INCOME or EXPENSE)")

@@ -3,7 +3,10 @@ package com.sanket.financedashboardapi.service;
 import com.sanket.financedashboardapi.dto.request.UpdateRoleRequest;
 import com.sanket.financedashboardapi.dto.request.UpdateStatusRequest;
 import com.sanket.financedashboardapi.dto.response.UserResponse;
+import com.sanket.financedashboardapi.enums.Role;
+import com.sanket.financedashboardapi.enums.UserStatus;
 import com.sanket.financedashboardapi.exception.ResourceNotFoundException;
+import com.sanket.financedashboardapi.exception.UnauthorizedActionException;
 import com.sanket.financedashboardapi.model.User;
 import com.sanket.financedashboardapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,13 @@ public class UserService {
 
     public UserResponse updateRole(String id, UpdateRoleRequest request) {
         User user = findById(id);
+        if (user.getRole() == Role.ADMIN) {
+            long adminCount = userRepository.countByRole(Role.ADMIN);
+            if (adminCount <= 1) {
+                throw new UnauthorizedActionException(
+                        "Cannot change role of the last Admin in the system");
+            }
+        }
         user.setRole(request.getRole());
         user.setUpdatedAt(LocalDateTime.now());
         return toResponse(userRepository.save(user));
@@ -33,6 +43,13 @@ public class UserService {
 
     public UserResponse updateStatus(String id, UpdateStatusRequest request) {
         User user = findById(id);
+        if (user.getRole() == Role.ADMIN && request.getStatus() == UserStatus.INACTIVE) {
+            long adminCount = userRepository.countByRole(Role.ADMIN);
+            if (adminCount <= 1) {
+                throw new UnauthorizedActionException(
+                        "Cannot deactivate the last Admin in the system");
+            }
+        }
         user.setStatus(request.getStatus());
         user.setUpdatedAt(LocalDateTime.now());
         return toResponse(userRepository.save(user));

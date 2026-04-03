@@ -5,6 +5,8 @@ import com.sanket.financedashboardapi.dto.request.SignupRequest;
 import com.sanket.financedashboardapi.dto.response.AuthResponse;
 import com.sanket.financedashboardapi.enums.Role;
 import com.sanket.financedashboardapi.enums.UserStatus;
+import com.sanket.financedashboardapi.exception.DuplicateResourceException;
+import com.sanket.financedashboardapi.exception.ResourceNotFoundException;
 import com.sanket.financedashboardapi.exception.UnauthorizedActionException;
 import com.sanket.financedashboardapi.model.User;
 import com.sanket.financedashboardapi.repository.UserRepository;
@@ -29,7 +31,8 @@ public class AuthService {
 
     public AuthResponse signup(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UnauthorizedActionException("Email already in use");
+            throw new DuplicateResourceException("Email already in use: " + request.getEmail());
+
         }
 
         User user = User.builder()
@@ -54,7 +57,8 @@ public class AuthService {
         );
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
         return new AuthResponse(token, user.getEmail(), user.getRole().name());
