@@ -1,0 +1,7 @@
+spring.application.name=financedashboardapi
+server.port=8000
+
+spring.data.mongodb.uri=YOUR_MONGODB_URI_HERE
+
+app.jwt.secret=YOUR_JWT_SECRET_HERE
+app.jwt.expiration-ms=86400000
