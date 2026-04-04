@@ -31,8 +31,8 @@ cd finance-dashboard-api
 Server starts on `http://localhost:8000`
 
 ### Default Admin (Auto-seeded on first boot)
-Email:    admin@financeapi.com
-Password: Admin@123
+Email:    `admin@financeapi.co`
+Password: `Admin@123`
 
 ## Roles
 
